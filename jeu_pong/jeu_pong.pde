@@ -9,8 +9,8 @@ class Balle {
   float x, y, w, h;
   float dx, dy;
   Balle() {
-    x = width/2;
-    y = height/2;
+    x = 500;
+    y = 500;
     w = 10;
     h = 10;
     dx = 2;
@@ -30,6 +30,10 @@ class Balle {
       dy=-dy;
       augmenter_vitesse();
     }
+    if (x<=r1.x+r1.longueur && y > r1.y && y< r1.y+r1.largeur) {
+      dx = -dx;
+      dy = -dy;
+    }
     dessiner();
   }
   void augmenter_vitesse() {
@@ -41,8 +45,8 @@ class Balle {
 class Raquette {
   int x, y, dy, longueur, largeur;
   Raquette() {
-    x = 50;
-    y = height/2;
+    x = 20;
+    y = 300;
     dy = 2;
     longueur = 20;
     largeur = 100;
@@ -50,14 +54,20 @@ class Raquette {
   void dessiner() {
     rect(x, y, longueur, largeur);
   }
-  void bouger_up() {
+  void up_move() {
     if (y+largeur < height) {
       y+= dy;
     }
+    else {
+      y = 10;
+    }
   }
-  void bouger_down() {
+  void down_move() {
     if (y > 0) {
       y-=dy;
+    }
+    else {
+      y = height-largeur-10;
     }
   }
 }
@@ -71,10 +81,10 @@ void draw() {
   balle.bouger();
   if (key == CODED) {
     if (keyCode == DOWN) {
-      r1.bouger_up();
+      r1.up_move();
     }
     if(keyCode == UP) {
-      r1.bouger_down();
+      r1.down_move();
     }
   }
   r1.dessiner();
