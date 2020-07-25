@@ -24,27 +24,27 @@ class Balle {
     x+=dx;
     y+=dy;
     if (x >= width || x<=0) {
-      dx=-dx;
+      dx=-(dx*random(0,2));
       augmenter_vitesse();
     }
     if (y >= height || y<=0) {
-      dy=-dy;
+      dy=-(dy*random(0,2));
       augmenter_vitesse();
     }
     if (x<=r1.x+r1.longueur && y > r1.y && y< r1.y+r1.largeur) {
-      dx = -dx;
-      dy = -dy;
+      dx = -(dx*random(0,2));
+      dy = -(dy*random(0,2));
     }
     if (x>=r2.x && y > r2.y && y< r2.y+r2.largeur) {
-      dx = -dx;
-      dy = -dy;
+      dx = -(dx*random(0,2));
+      dy = -(dy*random(0,2));
     }
     if (x>r2.x+r2.longueur) {
       c.joueur++;
       x = width/2;
       y = height/2;
     }
-    if (x<r1.x){
+    if (x<r1.x) {
       c.ord++;
       x = width/2;
       y = height/2;
@@ -53,8 +53,10 @@ class Balle {
   }
   void augmenter_vitesse() {
     float augm = 1.2;
-    dx = dx * augm;
-    dy = dy * augm;
+    if (abs(dx)<13) {
+      dx = dx * augm;
+      dy = dy * augm;
+    }
   }
 }
 
@@ -109,7 +111,7 @@ class Compteur {
 
 Balle balle = new Balle();
 Raquette r1 = new Raquette(20, 300);
-Raquette r2 = new Raquette(1500, 300);
+Raquette r2 = new Raquette(1550, 300);
 Compteur c = new Compteur();
 
 void draw() {
@@ -117,16 +119,43 @@ void draw() {
   c.dessiner();
   noFill();
   ellipse(width/2, height/2, 500, 500);
-
   line(width/2, 0, width/2, height);
   balle.bouger();
+  //a revoir (reaction de l'ordinateur face à la balle)
+  /*
   r1.changey_mouse();
-  if (balle.dy>0 && r2.y>balle.y) {
-    r2.up_move();
-  } else if (balle.dy<0 && r2.y<balle.y) {
-    r2.down_move();
-  } else {
-    r2.up_move();
+   if (balle.dy>0 && r2.y>balle.y) {
+   r2.up_move();
+   } else if (balle.dy<0 && r2.y<balle.y) {
+   r2.down_move();
+   } else {
+   r2.up_move();
+   }
+   r2.dessiner();
+   */
+  if (keyPressed) {
+    if (key == 'z') {
+      r1.down_move();
+    }
+    if (key == 's') {
+      r1.up_move();
+    }
+    if (key == 'p') {
+      r2.down_move();
+    }
+    if (key == 'm') {
+      r2.up_move();
+    }
   }
+  /*
+  if (key == CODED) {
+   if (keyCode==UP) {
+   r2.down_move();
+   }
+   if (keyCode==DOWN) {
+   r2.up_move();
+   }*/
+  r1.dessiner();
   r2.dessiner();
+  //}
 }
