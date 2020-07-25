@@ -3,16 +3,17 @@ void setup() {
   background(0);
   stroke(255);
   strokeWeight(5);
+  smooth();
 }
 
 class Balle {
   float x, y, w, h;
   float dx, dy;
   Balle() {
-    x = 500;
-    y = 500;
-    w = 10;
-    h = 10;
+    x = width/2;
+    y = height/2;
+    w = 5;
+    h = 5;
     dx = 2;
     dy = 2;
   }
@@ -34,21 +35,36 @@ class Balle {
       dx = -dx;
       dy = -dy;
     }
+    if (x>=r2.x && y > r2.y && y< r2.y+r2.largeur) {
+      dx = -dx;
+      dy = -dy;
+    }
+    if (x>r2.x+r2.longueur) {
+      c.joueur++;
+      x = width/2;
+      y = height/2;
+    }
+    if (x<r1.x){
+      c.ord++;
+      x = width/2;
+      y = height/2;
+    }
     dessiner();
   }
   void augmenter_vitesse() {
-    dx = dx * 1.01;
-    dy = dy * 1.01;
+    float augm = 1.2;
+    dx = dx * augm;
+    dy = dy * augm;
   }
 }
 
 class Raquette {
   int x, y, dy, longueur, largeur;
-  Raquette() {
-    x = 20;
-    y = 300;
-    dy = 2;
-    longueur = 20;
+  Raquette(int nx, int ny) {
+    x = nx;
+    y = ny;
+    dy = 5;
+    longueur = 5;
     largeur = 100;
   }
   void dessiner() {
@@ -57,36 +73,60 @@ class Raquette {
   void up_move() {
     if (y+largeur < height) {
       y+= dy;
-    }
-    else {
+    } else {
       y = 10;
     }
   }
   void down_move() {
     if (y > 0) {
       y-=dy;
-    }
-    else {
+    } else {
       y = height-largeur-10;
     }
   }
+  void changey_mouse() {
+    y = mouseY;
+    dessiner();
+  }
 }
 
+class Compteur {
+  int ord, joueur;
+  Compteur() {
+    ord = 0;
+    joueur = 0;
+  }
+  void dessiner() {
+    rect(width/2-100, 0, 200, 50);
+    fill(255);
+    text(joueur, width/2-60, 42);
+    text(ord, width/2+40, 42);
+    PFont police = loadFont("Arial-BoldMT-48.vlw");
+    textFont(police, 48);
+  }
+}
+
+
 Balle balle = new Balle();
-Raquette r1 = new Raquette();
+Raquette r1 = new Raquette(20, 300);
+Raquette r2 = new Raquette(1500, 300);
+Compteur c = new Compteur();
 
 void draw() {
   background(0);
+  c.dessiner();
+  noFill();
+  ellipse(width/2, height/2, 500, 500);
+
   line(width/2, 0, width/2, height);
   balle.bouger();
-  if (key == CODED) {
-    if (keyCode == DOWN) {
-      r1.up_move();
-    }
-    if(keyCode == UP) {
-      r1.down_move();
-    }
+  r1.changey_mouse();
+  if (balle.dy>0 && r2.y>balle.y) {
+    r2.up_move();
+  } else if (balle.dy<0 && r2.y<balle.y) {
+    r2.down_move();
+  } else {
+    r2.up_move();
   }
-  r1.dessiner();
-
+  r2.dessiner();
 }
