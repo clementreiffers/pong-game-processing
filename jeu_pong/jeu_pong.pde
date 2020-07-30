@@ -1,21 +1,15 @@
-void setup() {
-  fullScreen();
-  background(0);
-  stroke(255);
-  strokeWeight(5);
-  smooth();
-}
-
 class Balle {
   float x, y, w, h;
   float dx, dy;
   Balle() {
-    x = width/2;
-    y = height/2;
     w = 5;
     h = 5;
     dx = 2;
     dy = 2;
+  }
+  void set(float nx, float ny) {
+    x = nx;
+    y = ny;
   }
   void dessiner() {
     ellipse(x, y, w, h);
@@ -23,22 +17,34 @@ class Balle {
   void bouger() {
     x+=dx;
     y+=dy;
-    if (x >= width || x<=0) {
-      dx=-(dx*random(0,2));
-      augmenter_vitesse();
+    int vitesse_max = 3;
+    if (x >= width-w-dx || x<=w+dx) {
+      if (dx < vitesse_max) {
+        dx=-(dx*random(0.5, 2));
+      }
     }
-    if (y >= height || y<=0) {
-      dy=-(dy*random(0,2));
-      augmenter_vitesse();
+    if (y >= height || y<=w+dy) {
+      if (dy < vitesse_max) {
+        dy=-(dy*random(0.5, 2));
+      }
     }
-    if (x<=r1.x+r1.longueur && y > r1.y && y< r1.y+r1.largeur) {
-      dx = -(dx*random(0,2));
-      dy = -(dy*random(0,2));
+    if (x<=r1.x+r1.longueur+w*2+dx && y >=r1.y && y<= r1.y+r1.largeur) {
+      if (dx< vitesse_max) {
+        dx = -(dx*random(0.5, 2));
+      }
+      if (dy < vitesse_max) {
+        dy = -(dy*random(0.5, 2));
+      }
     }
-    if (x>=r2.x && y > r2.y && y< r2.y+r2.largeur) {
-      dx = -(dx*random(0,2));
-      dy = -(dy*random(0,2));
+    if (x>=r2.x-w*2-dx && y >= r2.y && y<=r2.y+r2.largeur) {
+      if (dx< vitesse_max) {
+        dx = -(dx*random(0.5, 2));
+      }
+      if (dy < vitesse_max) {
+        dy = -(dy*random(0.5, 2));
+      }
     }
+    //ajout des points
     if (x>r2.x+r2.longueur) {
       c.joueur++;
       x = width/2;
@@ -51,23 +57,19 @@ class Balle {
     }
     dessiner();
   }
-  void augmenter_vitesse() {
-    float augm = 1.2;
-    if (abs(dx)<13) {
-      dx = dx * augm;
-      dy = dy * augm;
-    }
-  }
 }
 
+
 class Raquette {
-  int x, y, dy, longueur, largeur;
-  Raquette(int nx, int ny) {
-    x = nx;
-    y = ny;
+  float x, y, dy, longueur, largeur;
+  Raquette() {
     dy = 5;
     longueur = 5;
     largeur = 100;
+  }
+  void set(float nx, float ny) {
+    x = nx;
+    y = ny;
   }
   void dessiner() {
     rect(x, y, longueur, largeur);
@@ -108,11 +110,20 @@ class Compteur {
   }
 }
 
-
 Balle balle = new Balle();
-Raquette r1 = new Raquette(20, 300);
-Raquette r2 = new Raquette(1550, 300);
+Raquette r1 = new Raquette();
+Raquette r2 = new Raquette();
 Compteur c = new Compteur();
+void setup() {
+  fullScreen();
+  background(0);
+  stroke(255);
+  strokeWeight(5);
+  smooth();
+  balle.set(width/2, height/2);
+  r1.set(20, 300);
+  r2.set(width -20, 300);
+}
 
 void draw() {
   background(0);
@@ -120,6 +131,7 @@ void draw() {
   noFill();
   ellipse(width/2, height/2, 500, 500);
   line(width/2, 0, width/2, height);
+  //balle.dessiner();
   balle.bouger();
   //a revoir (reaction de l'ordinateur face à la balle)
   /*
