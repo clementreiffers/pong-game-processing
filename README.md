@@ -2,7 +2,7 @@
 
 # Comment installer
 
-le fichier à executer est "jeu_pont.pde"
+le fichier à executer est "jeu_pong.pde"
 pour l'executer il faut installer processing sur ce site : https://processing.org/ 
 
 # Comment jouer 
