@@ -17,31 +17,43 @@ class Balle {
   void bouger() {
     x+=dx;
     y+=dy;
-    int vitesse_max = 3;
-    if (x >= width-w-dx || x<=w+dx) {
+    int vitesse_max = 5;
+    if (x >= width-w-dx || x<=w*2+dx) {
       if (dx < vitesse_max) {
         dx=-(dx*random(0.5, 2));
+      } else {
+        dx =- dx/dx;
       }
     }
-    if (y >= height || y<=w+dy) {
+    if (y >= height-w|| y<=0) {
       if (dy < vitesse_max) {
         dy=-(dy*random(0.5, 2));
+      } else {
+        dy = -dy/dy;
       }
     }
-    if (x<=r1.x+r1.longueur+w*2+dx && y >=r1.y && y<= r1.y+r1.largeur) {
+    if (x<=r1.x+r1.longueur+w && y >=r1.y && y<= r1.y+r1.largeur) {
       if (dx< vitesse_max) {
         dx = -(dx*random(0.5, 2));
+      } else {
+        dx =- dx/dx;
       }
       if (dy < vitesse_max) {
         dy = -(dy*random(0.5, 2));
+      } else {
+        dy = -dy/dy;
       }
     }
-    if (x>=r2.x-w*2-dx && y >= r2.y && y<=r2.y+r2.largeur) {
+    if (x>=r2.x-w-dx && y >= r2.y && y<=r2.y+r2.largeur) {
       if (dx< vitesse_max) {
         dx = -(dx*random(0.5, 2));
+      } else {
+        dx =- dx/dx;
       }
       if (dy < vitesse_max) {
         dy = -(dy*random(0.5, 2));
+      } else {
+        dy = -dy/dy;
       }
     }
     //ajout des points
